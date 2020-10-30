@@ -20,11 +20,11 @@
 
 /*Defines*/
 
-#define WIFI_SSID "IABS"
-#define WIFI_PASS "SUSTENTABILIDADE"
+#define WIFI_SSID "IABS-REC"
+#define WIFI_PASS "sustentabilidade"
 
 #define SPREADSHEET_ID "AKfycbzcyzndCjZdTTxk6c81hTpXzdCjtw6--AkWKRXAAeBq1kCo2Ek" 
-#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?o2=500" // Change here the GET parameters
+#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?o2=500&temp=300" // Change here the GET parameters
 
 /*Structures*/
 typedef enum {
