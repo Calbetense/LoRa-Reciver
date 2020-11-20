@@ -19,7 +19,7 @@
 
 #include "lora.h"
 
-#include <string.h>
+//#include <string.h>
 
 /*Defines*/
 
@@ -27,7 +27,14 @@
 #define WIFI_PASS "sustentabilidade"
 
 #define SPREADSHEET_ID "AKfycbzcyzndCjZdTTxk6c81hTpXzdCjtw6--AkWKRXAAeBq1kCo2Ek" 
-#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?" // Change here the GET parameters
+#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"
+
+/*Defines needed of LoRa Library*/
+#define CONFIG_CS_GPIO      18
+#define CONFIG_RST_GPIO     14
+#define CONFIG_MISO_GPIO    19
+#define CONFIG_MOSI_GPIO    27
+#define CONFIG_SCK_GPIO     5
 
 /*Structures*/
 typedef enum {
@@ -39,7 +46,7 @@ typedef enum {
 typedef struct
 {
     Id_t id;
-    long data;
+    float data;
 }Data_t;
 
 

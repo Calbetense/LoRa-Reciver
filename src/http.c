@@ -15,8 +15,7 @@ esp_err_t _http_event_handle(esp_http_client_event_t *evt)
             ESP_LOGI(TAG, "HTTP_EVENT_HEADER_SENT");
             break;
         case HTTP_EVENT_ON_HEADER:
-            ESP_LOGI(TAG, "HTTP_EVENT_ON_HEADER");
-            printf("%.*s", evt->data_len, (char*)evt->data);
+            //ESP_LOGI(TAG, "HTTP_EVENT_ON_HEADER");
             break;
         case HTTP_EVENT_ON_DATA:
             ESP_LOGI(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);

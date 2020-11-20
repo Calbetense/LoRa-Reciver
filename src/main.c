@@ -1,7 +1,7 @@
 /*
     RECIVER:
 
-    Colects the data from the LoRa channel and sends ir to a Google Sheet, via http GET request.
+    Colects the data from the LoRa channel and sends it to a Google Sheet, via http GET request.
 */
 
 #include <main.h>
@@ -11,37 +11,43 @@ static const char* TAG = "MAIN";
 static void http_and_lora(void *pvParameters)
 {
     Data_t toSend;
-    char* url = URL;
+    
+    char url[sizeof(URL)+22];   //gambiarra!
 
     while (1) {
-        toSend = lora_utils_receive();
+        vTaskDelay(5); 
 
-        switch(toSend){
+        toSend = lora_utils_receive();
+        if(toSend.id == 404) continue;
+
+        switch(toSend.id){
             case Temp:
-                strcat(url, "temp="+toSend.data); //Mirar si esto funciona
+                sprintf(url, "%stemp=%f", URL, toSend.data);
                 break;
             case O2:
-                strcat(url, "o2="+toSend.data);
+                sprintf(url, "%so2=%f", URL, toSend.data);
                 break;
             case Cont:
-                strcat(url, "cont="+toSend.data);
+                sprintf(url, "%scont=%f", URL, toSend.data);
                 break; 
             default: 
-                ESP_LOGE(TAG, "No se ha recibido nada");
-                vTaskDelay(LOQUESEA);
-                return;
+                sprintf(url, "%s", URL);
         }
+        
         trigger_http_request(url);      
-        vTaskDelay(pdMS_TO_TICKS(5000)); // Send data every 5s CADA CUÁNTO SERÄ LO ÓPTIMO??
     }
 }
 
 void app_main() {
- 
-    ESP_LOGI(TAG, "Start program");
+
+    ESP_LOGI(TAG, "Start program, RX");
 
     initialise_wifi();
     lora_utils_init();
 
-    xTaskCreate(&http_and_lora, "http_and_lora", 1024, NULL, 5, NULL);
+    vTaskDelay(pdMS_TO_TICKS(5000)); 
+
+    xTaskCreate(&http_and_lora, "http_and_lora", 4086, NULL, 5, NULL);
+
+    vTaskDelete(NULL);
 }

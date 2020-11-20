@@ -2,24 +2,28 @@
 
 #include "main.h"
 
+static const char* TAG = "LoRa";
+
 void lora_utils_init(){
-   lora_init();
-   lora_set_frequency(915e6);
-   lora_enable_crc();
+    lora_init();
+    lora_set_bandwidth(125E3);
+    lora_set_spreading_factor(8);
+    lora_set_frequency(915e6);      // Brasil's Legal frequancy
+    lora_enable_crc();
+
+    ESP_LOGI(TAG, "LoRa init");
 }
 
-Data_t lora_utils_receive(){            // HAY QUE HACER MUCHAS PRUEBAS!! 
-    uint8_t buf[32];
-    int x;
-    
+Data_t lora_utils_receive(){           
+    Data_t buf;
+
     lora_receive();    // put into receive mode
     while(lora_received()) {
-        x = lora_receive_packet(buf, sizeof(buf));  // Guarda la info en el buf
-        buf[x] = 0;                                 // Por qué lo elimina??
-        printf("Received: %s\n", buf);              // Está imprimiendo Letra a letra, byte o qué? 
-        lora_receive();                             // Por qué vuelve a hacer eso?? Sirve si se lo quito??
+        lora_receive_packet((uint8_t *)&buf, sizeof(buf));
+        //ESP_LOGI(TAG, "Received: %f from %d,  with RSSI: %d\n", buf.data, buf.id, lora_packet_rssi());
+        return buf;
     }
-    vTaskDelay(1);
-    
-    return (Data_t) buf;    //NO ESTOY MUY SEGURO DE ESTO
+
+    buf.id = 404;   //Not a message
+    return buf;    
 }
