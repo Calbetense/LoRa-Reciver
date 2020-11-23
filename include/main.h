@@ -19,6 +19,7 @@
 
 #include "lora.h"
 
+#include "secrets.h"
 
 /*Defines*/
 
