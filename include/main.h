@@ -19,14 +19,9 @@
 
 #include "lora.h"
 
-//#include <string.h>
 
 /*Defines*/
 
-#define WIFI_SSID "IABS-REC"
-#define WIFI_PASS "sustentabilidade"
-
-#define SPREADSHEET_ID "AKfycbzcyzndCjZdTTxk6c81hTpXzdCjtw6--AkWKRXAAeBq1kCo2Ek" 
 #define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"
 
 /*Defines needed of LoRa Library*/
