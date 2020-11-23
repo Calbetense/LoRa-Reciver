@@ -22,7 +22,7 @@
 #include "secrets.h"
 
 /*Defines*/
-
+// WiFi SSID and password, and SPREADSHEET_ID in the secrets.h document
 #define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"
 
 /*Defines needed of LoRa Library*/
