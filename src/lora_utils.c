@@ -7,7 +7,7 @@ static const char* TAG = "LoRa";
 void lora_utils_init(){
     lora_init();
     lora_set_bandwidth(125E3);
-    lora_set_spreading_factor(8);
+    lora_set_spreading_factor(9);
     lora_set_frequency(915e6);      // Brasil's Legal frequancy
     lora_enable_crc();
 

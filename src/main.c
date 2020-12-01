@@ -15,20 +15,21 @@ static void http_and_lora(void *pvParameters)
     char url[sizeof(URL)+22];   //gambiarra!
 
     while (1) {
-        vTaskDelay(5); 
+        vTaskDelay(50); 
 
         toSend = lora_utils_receive();
         if(toSend.id == 404) continue;
 
         switch(toSend.id){
             case Temp:
-                sprintf(url, "%stemp=%f", URL, toSend.data);
+                sprintf(url, "%stemp=%.2f", URL, toSend.data);
                 break;
             case O2:
-                sprintf(url, "%so2=%f", URL, toSend.data);
+                sprintf(url, "%so2=%.2f", URL, toSend.data);
+                ESP_LOGI(TAG, "%s", url);
                 break;
             case Cont:
-                sprintf(url, "%scont=%f", URL, toSend.data);
+                sprintf(url, "%scont=%.2f", URL, toSend.data);
                 break; 
             default: 
                 sprintf(url, "%s", URL);
