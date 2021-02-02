@@ -1,7 +1,6 @@
-
 #pragma once
 
-/*Includes*/
+/************ Includes ***************/
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -21,9 +20,11 @@
 
 #include "secrets.h"
 
-/*Defines*/
+/************** Defines ****************/
 // WiFi SSID and password, and SPREADSHEET_ID in the secrets.h document
-#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"
+#define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"     //Make sure the SpreadSheet ID is the correct one
+
+#define DEBUG
 
 /*Defines needed of LoRa Library*/
 #define CONFIG_CS_GPIO      18
@@ -36,9 +37,11 @@
 typedef enum {
     O2,
     Temp,
-    Cont
+    Cont,
+    Orp
 }Id_t;
 
+/* All the data will reach with an identifier */
 typedef struct
 {
     Id_t id;
@@ -54,15 +57,15 @@ EventGroupHandle_t wifi_event_group;
    to the AP with an IP? */
 extern int CONNECTED_BIT;
 
-/*declarations*/
-    // HTTP
-    esp_err_t _http_event_handle(esp_http_client_event_t *evt);
-    void trigger_http_request(const char *url);
+/****************** Declarations ***************/
+// HTTP
+esp_err_t _http_event_handle(esp_http_client_event_t *evt);
+void trigger_http_request(const char *url);
 
-    // LoRa
-    void lora_utils_init();
-    Data_t lora_utils_receive();
+// LoRa
+void lora_utils_init();
+Data_t lora_utils_receive();
 
-    // WiFI
-    esp_err_t wifi_event_handler(void *ctx, system_event_t *event);
-    void initialise_wifi(void);
+// WiFI
+esp_err_t wifi_event_handler(void *ctx, system_event_t *event);
+void initialise_wifi(void);
