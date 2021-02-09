@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "freertos/queue.h"
 #include "freertos/event_groups.h"
 #include <esp_log.h>
 
@@ -23,6 +22,15 @@
 /************** Defines ****************/
 // WiFi SSID and password, and SPREADSHEET_ID in the secrets.h document
 #define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"     //Make sure the SpreadSheet ID is the correct one
+
+#define ORP_TELEGRAM
+#ifdef ORP_TELEGRAM
+#define URL_ORP_LUCAS "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_LUCAS"&text="
+#define URL_ORP_DANI "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_DANI"&text="
+#endif
+
+#define URL_RSSI "https://script.google.com/macros/s/"RSSI_ID"/exec?"     
+
 
 #define DEBUG
 

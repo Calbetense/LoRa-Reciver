@@ -15,6 +15,10 @@ static void http_and_lora(void *pvParameters)
     Data_t toSend;
     
     char url[sizeof(URL)+22];               // Gambiarra! Definir esse número (variable=toSend.data)
+    #ifdef ORP_TELEGRAM
+    char url_orp[sizeof(URL_ORP_LUCAS)+22];
+    #endif
+    char url_rssi[sizeof(URL_RSSI)+22];
 
     //Loop
     while (1) {
@@ -29,20 +33,37 @@ static void http_and_lora(void *pvParameters)
                 break;
             case O2:
                 sprintf(url, "%so2=%.2f",   URL, toSend.data);
-                ESP_LOGI(TAG, "%s", url);
                 break;
             case Cont:
                 sprintf(url, "%scont=%.2f", URL, toSend.data);
                 break; 
             case Orp:
                 sprintf(url, "%sorp=%.2f",  URL, toSend.data);
+                //ESP_LOGI(TAG, "%s", url);
                 break; 
             default: 
                 sprintf(url, "%s", URL);
         }
         
-        trigger_http_request(url);      
+        trigger_http_request(url);  
+
+        #ifdef ORP_TELEGRAM
+        /*Temporally, sends ORP to Telegram*/
+        if(toSend.id == Orp){
+            //LUCAS
+            sprintf(url_orp, "%sorp=%.2fmV",  URL_ORP_LUCAS, toSend.data);
+            trigger_http_request(url_orp);    
+            //DANI
+            /*sprintf(url_orp, "%sorp=%.2fmV",  URL_ORP_DANI, toSend.data);
+            trigger_http_request(url_orp);      */
+            
+            ESP_LOGI(TAG, "%s", url_rssi);
+            trigger_http_request(url_rssi);
+        }
+        #endif
+
     }
+    
 }
 
 void app_main() {
