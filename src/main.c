@@ -4,7 +4,7 @@
     Colects the data from the LoRa channel and sends it to a Google Sheet, via http GET request.
     Loop: Get the data, complets the url with the info and send to Internet
 */
-
+      
 #include <main.h>
 
 static const char* TAG = "MAIN";
