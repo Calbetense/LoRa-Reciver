@@ -1,8 +1,10 @@
 /*
     RECIVER:
 
-    Colects the data from the LoRa channel and sends it to a Google Sheet, via http GET request.
-    Loop: Get the data, complets the url with the info and send to Internet
+    Colects the data from the LoRa channel and sends it to a Google Sheet, via http GET request. 
+    Also, if desired, it can send message to Telegram (http) and to a MQTT broker
+
+    Configure the wanted methods at main.h's defines, and the credentials you have to define them at a secrets.h document that it's not included in GIT
 */
       
 #include <main.h>
@@ -13,12 +15,17 @@ static void http_and_lora(void *pvParameters)
 {
     //Declarations
     Data_t toSend;
+    esp_mqtt_client_handle_t client = mqtt_init();  // MQTT Sesion  //TODO - Init method at app_main()
     
-    char url[sizeof(URL)+22];               // Gambiarra! Definir esse número (variable=toSend.data)
+    char url[sizeof(URL)+22];               // Gambiarra! Definir esse número (variable=toSend.data + letras do nome da variavel)
     #ifdef ORP_TELEGRAM
     char url_orp[sizeof(URL_ORP_LUCAS)+22];
     #endif
     char url_rssi[sizeof(URL_RSSI)+22];
+
+    #ifdef MQTT
+    const char data[sizeof(float)];
+    #endif
 
     //Loop
     while (1) {
@@ -30,22 +37,50 @@ static void http_and_lora(void *pvParameters)
         switch(toSend.id){
             case Temp:
                 sprintf(url, "%stemp=%.2f", URL, toSend.data);
+                
+                #ifdef MQTT           
+                sprintf(data, "%f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensortemperatura/", data, 0, 2, 0);
+                #endif
+                
                 break;
             case O2:
                 sprintf(url, "%so2=%.2f",   URL, toSend.data);
+
+                #ifdef MQTT           
+                sprintf(data, "%f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensoroxigenio/", data, 0, 2, 0);
+                #endif
+
                 break;
-            case Cont:
-                sprintf(url, "%scont=%.2f", URL, toSend.data);
-                break; 
             case Orp:
                 sprintf(url, "%sorp=%.2f",  URL, toSend.data);
-                //ESP_LOGI(TAG, "%s", url);
+                #ifdef MQTT           
+                sprintf(data, "%f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensororp/", data, 0, 2, 0);
+                #endif
+
+                break; 
+            case Cont:
+                sprintf(url, "%scont=%.2f", URL, toSend.data);
+                
+                #ifdef MQTT           
+                sprintf(data, "%f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensorcontinuidade/", data, 0, 2, 0);
+                #endif
+
                 break; 
             default: 
                 sprintf(url, "%s", URL);
         }
         
-        trigger_http_request(url);  
+        //Google spreadSheets - General information
+        trigger_http_request(url); 
+    
+        //Google spreadsheets - LoRa RSSI
+        sprintf(url_rssi, "%srssi=%d",  URL_RSSI, lora_packet_rssi());
+        ESP_LOGI(TAG, "%s", url_rssi);
+        trigger_http_request(url_rssi);
 
         #ifdef ORP_TELEGRAM
         /*Temporally, sends ORP to Telegram*/
@@ -56,12 +91,12 @@ static void http_and_lora(void *pvParameters)
             //DANI
             /*sprintf(url_orp, "%sorp=%.2fmV",  URL_ORP_DANI, toSend.data);
             trigger_http_request(url_orp);      */
-            
-            ESP_LOGI(TAG, "%s", url_rssi);
-            trigger_http_request(url_rssi);
+        }else if(toSend.id == O2){
+            //LUCAS
+            sprintf(url_orp, "%sD.O.=%.2fmg/L",  URL_ORP_LUCAS, toSend.data);
+            //trigger_http_request(url_orp); // Activate when calibration's ready
         }
         #endif
-
     }
     
 }

@@ -16,6 +16,7 @@
 #include "esp_http_client.h"
 
 #include "lora.h"
+#include <mqtt_client.h>
 
 #include "secrets.h"
 
@@ -28,6 +29,8 @@
 #define URL_ORP_LUCAS "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_LUCAS"&text="
 #define URL_ORP_DANI "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_DANI"&text="
 #endif
+
+#define MQTT
 
 #define URL_RSSI "https://script.google.com/macros/s/"RSSI_ID"/exec?"     
 
@@ -77,3 +80,6 @@ Data_t lora_utils_receive();
 // WiFI
 esp_err_t wifi_event_handler(void *ctx, system_event_t *event);
 void initialise_wifi(void);
+
+// MQTT
+esp_mqtt_client_handle_t mqtt_init();
