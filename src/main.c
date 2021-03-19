@@ -15,21 +15,22 @@ static void http_and_lora(void *pvParameters)
 {
     //Declarations
     Data_t toSend;
-    esp_mqtt_client_handle_t client = mqtt_init();  // MQTT Sesion  //TODO - Init method at app_main()
     
-    char url[sizeof(URL)+22];               // Gambiarra! Definir esse número (variable=toSend.data + letras do nome da variavel)
+    char url[sizeof(URL)+22];                       // SpreadSheet URL           
     #ifdef ORP_TELEGRAM
-    char url_orp[sizeof(URL_ORP_LUCAS)+22];
+    char url_orp[sizeof(URL_ORP_LUCAS)+22];         // Telegram Bot URL
     #endif
     char url_rssi[sizeof(URL_RSSI)+22];
 
     #ifdef MQTT
-    const char data[sizeof(float)];
+    char data[sizeof(float)*2];
     #endif
+    
+    esp_mqtt_client_handle_t client = mqtt_init();  // MQTT Sesion  //TODO - Init method at app_main()
 
     //Loop
     while (1) {
-        vTaskDelay(50);                     // Little rest for the processor
+        vTaskDelay(50);                     // Little rest for the processor - Could it wake up the uC when a LoRa pkg arrives?
 
         toSend = lora_utils_receive();
         if(toSend.id == 404) continue;
@@ -40,7 +41,7 @@ static void http_and_lora(void *pvParameters)
                 
                 #ifdef MQTT           
                 sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensortemperatura/", data, 0, 2, 0);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/temperatura", data, 0, 2, 0);
                 #endif
                 
                 break;
@@ -49,7 +50,7 @@ static void http_and_lora(void *pvParameters)
 
                 #ifdef MQTT           
                 sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensoroxigenio/", data, 0, 2, 0);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/oxigeniodissolvido", data, 0, 2, 0);
                 #endif
 
                 break;
@@ -57,16 +58,16 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%sorp=%.2f",  URL, toSend.data);
                 #ifdef MQTT           
                 sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensororp/", data, 0, 2, 0);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/orp", data, 0, 2, 0);
                 #endif
 
                 break; 
-            case Cont:
+            case Cont:                              // Sensor not implemented yet
                 sprintf(url, "%scont=%.2f", URL, toSend.data);
                 
                 #ifdef MQTT           
-                sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensorcontinuidade/", data, 0, 2, 0);
+                //sprintf(data, "%f", toSend.data);
+                //esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/sensorcontinuidade/", data, 0, 2, 0);
                 #endif
 
                 break; 
