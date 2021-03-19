@@ -1,12 +1,12 @@
-#LoRa-Reciver
+# LoRa-Reciver
 
-Tekes the samples from another LoRa-Sender (Repository in this GitHub) and sends via HTTP to a Google Sheets and Telegram. It has the option to send via MQTT as well. 
+Tekes the samples from another LoRa-Sender (Repository in this GitHub [LoRa-Sender](https://github.com/Calbetense/LoRa-Sender)) and sends via HTTP to a Google Sheets and Telegram. It has the option to send via MQTT as well. 
 
 All sensible info is in the include/secrets.h file, but it's not upload here for obvious reasons. 
 
 If want to use this code either create the same file whith your data or just add it on the main.h defines.
 
-\code
+```C
 // WiFI
 #define WIFI_SSID "XXXXXXXXXXXXX"
 #define WIFI_PASS "xxxxxxxxxxxxx"
@@ -22,4 +22,4 @@ If want to use this code either create the same file whith your data or just add
 #define MQTT_PORT       1883
 #define MQTT_USERNAME   "XXXXXXXXXX"
 #define MQTT_PASSWORD   "xxxxxxxxxx"
-\endcode
+```
