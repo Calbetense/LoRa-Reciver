@@ -45,6 +45,8 @@
 #define CONFIG_SCK_GPIO     5
 
 /*Structures*/
+
+// Parameter
 typedef enum {
     O2,
     Temp,
@@ -52,10 +54,15 @@ typedef enum {
     Orp
 }Id_t;
 
+// Place
+typedef enum {
+    BERCARIO_01
+}Id_sender_t;
+
 /* All the data will reach with an identifier */
-typedef struct
-{
+typedef struct{
     Id_t id;
+    Id_sender_t sender;
     float data;
 }Data_t;
 

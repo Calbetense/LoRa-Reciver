@@ -24,7 +24,8 @@ static void http_and_lora(void *pvParameters)
     char url_rssi[sizeof(URL_RSSI)+22];
 
     #ifdef MQTT
-    const char data[sizeof(float)];
+    //const char* topic[70];       // sure 70 is the max length ??                  // TODO
+    char data[sizeof(float)*2];
     #endif
 
     //Loop
@@ -34,13 +35,20 @@ static void http_and_lora(void *pvParameters)
         toSend = lora_utils_receive();
         if(toSend.id == 404) continue;
 
+        switch(toSend.sender){
+            case BERCARIO_01:
+                break;
+            default:
+                ESP_LOGI(TAG, "Where the hell are the sensors it placed???");
+        }
+
         switch(toSend.id){
             case Temp:
                 sprintf(url, "%stemp=%.2f", URL, toSend.data);
                 
                 #ifdef MQTT           
-                sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensortemperatura/", data, 0, 2, 0);
+                sprintf(data, "%.2f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/temperatura", data, 0, 2, 0);
                 #endif
                 
                 break;
@@ -48,16 +56,16 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%so2=%.2f",   URL, toSend.data);
 
                 #ifdef MQTT           
-                sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensoroxigenio/", data, 0, 2, 0);
+                sprintf(data, "%.2f", toSend.data);
+                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/oxigeniodissolvido", data, 0, 2, 0);
                 #endif
 
                 break;
             case Orp:
                 sprintf(url, "%sorp=%.2f",  URL, toSend.data);
                 #ifdef MQTT           
-                sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensororp/", data, 0, 2, 0);
+                sprintf(data, "%.2f", toSend.data);
+                esp_mqtt_client_publish(client, "iabs/petrolina/projetocamarao/bebedouro/bercario/agua/orp", data, 0, 2, 0);
                 #endif
 
                 break; 
@@ -65,8 +73,8 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%scont=%.2f", URL, toSend.data);
                 
                 #ifdef MQTT           
-                sprintf(data, "%f", toSend.data);
-                esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensorcontinuidade/", data, 0, 2, 0);
+                sprintf(data, "%.2f", toSend.data);
+                //esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensorcontinuidade/", data, 0, 2, 0);
                 #endif
 
                 break; 
