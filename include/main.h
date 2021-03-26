@@ -24,7 +24,7 @@
 // WiFi SSID and password, and SPREADSHEET_ID in the secrets.h document
 #define URL "https://script.google.com/macros/s/"SPREADSHEET_ID"/exec?"     //Make sure the SpreadSheet ID is the correct one
 
-#define ORP_TELEGRAM
+//#define ORP_TELEGRAM
 #ifdef ORP_TELEGRAM
 #define URL_ORP_LUCAS "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_LUCAS"&text="
 #define URL_ORP_DANI "https://api.telegram.org/"TELEGRAM_ID"/sendMessage?chat_id="CHAT_ID_DANI"&text="

@@ -23,10 +23,7 @@ static void http_and_lora(void *pvParameters)
     char url_rssi[sizeof(URL_RSSI)+22];
 
     #ifdef MQTT
-<<<<<<< HEAD
     //const char* topic[70];       // sure 70 is the max length ??                  // TODO
-=======
->>>>>>> b450e292097c62ecad1839b9def47a7cdbeb681f
     char data[sizeof(float)*2];
     #endif
     
@@ -51,11 +48,7 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%stemp=%.2f", URL, toSend.data);
                 
                 #ifdef MQTT           
-<<<<<<< HEAD
                 sprintf(data, "%.2f", toSend.data);
-=======
-                sprintf(data, "%f", toSend.data);
->>>>>>> b450e292097c62ecad1839b9def47a7cdbeb681f
                 esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/temperatura", data, 0, 2, 0);
                 #endif
                 
@@ -64,11 +57,7 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%so2=%.2f",   URL, toSend.data);
 
                 #ifdef MQTT           
-<<<<<<< HEAD
                 sprintf(data, "%.2f", toSend.data);
-=======
-                sprintf(data, "%f", toSend.data);
->>>>>>> b450e292097c62ecad1839b9def47a7cdbeb681f
                 esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/oxigeniodissolvido", data, 0, 2, 0);
                 #endif
 
@@ -76,13 +65,8 @@ static void http_and_lora(void *pvParameters)
             case Orp:
                 sprintf(url, "%sorp=%.2f",  URL, toSend.data);
                 #ifdef MQTT           
-<<<<<<< HEAD
                 sprintf(data, "%.2f", toSend.data);
-                esp_mqtt_client_publish(client, "iabs/petrolina/projetocamarao/bebedouro/bercario/agua/orp", data, 0, 2, 0);
-=======
-                sprintf(data, "%f", toSend.data);
                 esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/agua/orp", data, 0, 2, 0);
->>>>>>> b450e292097c62ecad1839b9def47a7cdbeb681f
                 #endif
 
                 break; 
@@ -90,13 +74,8 @@ static void http_and_lora(void *pvParameters)
                 sprintf(url, "%scont=%.2f", URL, toSend.data);
                 
                 #ifdef MQTT           
-<<<<<<< HEAD
                 sprintf(data, "%.2f", toSend.data);
                 //esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/sensorcontinuidade/", data, 0, 2, 0);
-=======
-                //sprintf(data, "%f", toSend.data);
-                //esp_mqtt_client_publish(client, "/iabs/petrolina/projetocamarao/bebedouro/bercario/sensorcontinuidade/", data, 0, 2, 0);
->>>>>>> b450e292097c62ecad1839b9def47a7cdbeb681f
                 #endif
 
                 break; 
@@ -124,7 +103,7 @@ static void http_and_lora(void *pvParameters)
         }else if(toSend.id == O2){
             //LUCAS
             sprintf(url_orp, "%sD.O.=%.2fmg/L",  URL_ORP_LUCAS, toSend.data);
-            //trigger_http_request(url_orp); // Activate when calibration's ready
+            trigger_http_request(url_orp); // Activate when calibration's ready
         }
         #endif
     }
@@ -140,7 +119,7 @@ void app_main() {
     initialise_wifi();
     lora_utils_init();
 
-    vTaskDelay(pdMS_TO_TICKS(5000));        // Gambiarra!! How long will this last to init EXACTLY??
+    vTaskDelay(pdMS_TO_TICKS(5000));        // Gambiarra!! How long will this last to init EXACTLY??        esp_wifi_sta_get_ap_info(wifi_ap_record_t *ap_info)
 
     xTaskCreate(&http_and_lora, "http_and_lora", 4086, NULL, 5, NULL);
 
